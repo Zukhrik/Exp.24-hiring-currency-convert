@@ -11,7 +11,7 @@ function App() {
   useGetCurrencyList()
   
   return (
-    <Container sx={{padding: '32px 0'}}>
+    <Container sx={{padding: '32px 0', position: 'relative'}}>
       <Routes>
         <Route path='/' element={<Converting/>}/>
         <Route path='/rating' element={<RatingPage/>}/>

@@ -20,37 +20,38 @@ export const RatingPage = () => {
     <Stack spacing={5}>
       <Paper elevation={3} sx={{padding: 4, overflow: 'hidden'}}>
         <Stack spacing={3}>
-          <Typography variant='h3' textAlign='center'>
-            {`Base currency: ${baseCurrency || 'USD'}`}
-          </Typography>
-          <FormControl>
-            <InputLabel id='demo-simple-select-label'>Selected currency</InputLabel>
-            <Select
-              id='demo-simple-select'
-              labelId='demo-simple-select-label'
-              label='Selected currency'
-              onChange={(e) => handleSelect(e.target.value)}
-              value={
-                data && data?.rates && !!baseCurValue && !!baseCurrency ? baseCurrency : ''
-              }
-            >
-              {
-                !!data && data?.rates && !!baseCurValue && (
-                  baseCur.length > 2
-                    ? (
-                      findCurrencies(data?.rates, baseCurValue).map((item, idx) => (
-                        <MenuItem value={item.split(' ')[1]} key={idx + 1}>{item.split(' ')[1]}</MenuItem>
-                      ))
-                    )
-                    : (
-                      currencies(data?.rates).map((item, idx) => (
-                        <MenuItem value={item.split(' ')[1]} key={idx + 1}>{item.split(' ')[1]}</MenuItem>
-                      ))
-                    )
-                )
-              }
-            </Select>
-          </FormControl>
+          <Typography variant='h3' textAlign='center'>Select custom currency</Typography>
+          <Stack direction='row' spacing={3} alignItems='center'>
+            <FormControl sx={{width: 200}}>
+              <InputLabel>Selected currency</InputLabel>
+              <Select
+                label='Selected currency'
+                onChange={(e) => handleSelect(e.target.value)}
+                value={
+                  data && data?.rates && !!baseCurValue && !!baseCurrency ? baseCurrency : ''
+                }
+              >
+                {
+                  !!data && data?.rates && !!baseCurValue && (
+                    baseCur.length > 2
+                      ? (
+                        findCurrencies(data?.rates, baseCurValue).map((item, idx) => (
+                          <MenuItem value={item.split(' ')[1]} key={idx + 1}>{item.split(' ')[1]}</MenuItem>
+                        ))
+                      )
+                      : (
+                        currencies(data?.rates).map((item, idx) => (
+                          <MenuItem value={item.split(' ')[1]} key={idx + 1}>{item.split(' ')[1]}</MenuItem>
+                        ))
+                      )
+                  )
+                }
+              </Select>
+            </FormControl>
+            <Typography variant='h4'>
+              {`Base currency: ${baseCurrency || 'USD'}`}
+            </Typography>
+          </Stack>
           <Stack spacing={1} sx={{height: 500, overflowY: 'auto', overflowX: 'hidden'}}>
             {
               !!data && data?.rates && (
