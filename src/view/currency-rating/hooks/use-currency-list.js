@@ -7,7 +7,7 @@ export function useCurrencyList() {
   
   const handleSelect = useCallback((val) => {
     setBaseCur(val)
-    searchParams.set('base', val.split(' ')[1])
+    searchParams.set('base', val)
     setSearchParams(searchParams)
   }, [setSearchParams, searchParams])
   

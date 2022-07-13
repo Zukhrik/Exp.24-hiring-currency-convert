@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button, MenuItem, Paper, Select, Stack, Typography} from '@mui/material'
+import {Button, FormControl, InputLabel, MenuItem, Paper, Select, Stack, Typography} from '@mui/material'
 import {useStore} from 'effector-react'
 import {$currencyModel} from '../../../models/currencies'
 import {currencies, findCurrencies, findCurVal} from '../../../utils'
@@ -13,8 +13,8 @@ export const RatingPage = () => {
   const [searchParams] = useSearchParams()
   const {baseCur, handleSelect} = useCurrencyList()
   const {$currencyList: {data}} = useStore($currencyModel)
-  let baseCurrency = searchParams.get('base')?.toUpperCase()
-  let baseCurValue = !!data && !!data?.rates && findCurVal(data?.rates, baseCurrency)
+  let baseCurrency = searchParams.get('base') ? searchParams.get('base')?.toUpperCase() : 'USD'
+  let baseCurValue = !!data && !!data?.rates && !!baseCurrency && findCurVal(data?.rates, baseCurrency)
   
   return (
     <Stack spacing={5}>
@@ -23,30 +23,38 @@ export const RatingPage = () => {
           <Typography variant='h3' textAlign='center'>
             {`Base currency: ${baseCurrency || 'USD'}`}
           </Typography>
-          <Select
-            onChange={(e) => handleSelect(e.target.value)}
-            value={baseCurrency || ''}
-          >
+          <FormControl>
+            <InputLabel id='demo-simple-select-label'>Selected currency</InputLabel>
+            <Select
+              id='demo-simple-select'
+              labelId='demo-simple-select-label'
+              label='Selected currency'
+              onChange={(e) => handleSelect(e.target.value)}
+              value={
+                data && data?.rates && !!baseCurValue && !!baseCurrency ? baseCurrency : ''
+              }
+            >
+              {
+                !!data && data?.rates && !!baseCurValue && (
+                  baseCur.length > 2
+                    ? (
+                      findCurrencies(data?.rates, baseCurValue).map((item, idx) => (
+                        <MenuItem value={item.split(' ')[1]} key={idx + 1}>{item.split(' ')[1]}</MenuItem>
+                      ))
+                    )
+                    : (
+                      currencies(data?.rates).map((item, idx) => (
+                        <MenuItem value={item.split(' ')[1]} key={idx + 1}>{item.split(' ')[1]}</MenuItem>
+                      ))
+                    )
+                )
+              }
+            </Select>
+          </FormControl>
+          <Stack spacing={1} sx={{height: 500, overflowY: 'auto', overflowX: 'hidden'}}>
             {
               !!data && data?.rates && (
-                baseCur.length > 2
-                  ? (
-                    findCurrencies(data?.rates, baseCurValue).map((item, idx) => (
-                      <MenuItem value={item} key={idx + 1}>{item}</MenuItem>
-                    ))
-                  )
-                  : (
-                    currencies(data?.rates).map((item, idx) => (
-                      <MenuItem value={item} key={idx + 1}>{item}</MenuItem>
-                    ))
-                  )
-              )
-            }
-          </Select>
-          <Stack spacing={1} sx={{maxHeight: 500, overflowY: 'auto', overflowX: 'hidden'}}>
-            {
-              !!data && data?.rates && (
-                baseCur.length > 2
+                !!baseCurValue && !!baseCurrency
                   ? (
                     findCurrencies(data?.rates, baseCurValue).map((item, idx) => (
                       <Typography key={idx + 1}>
